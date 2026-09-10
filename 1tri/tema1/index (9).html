@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Descubre el contexto</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 30px;
+      color: #222;
+    }
+    .contenedor {
+      max-width: 850px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+    h1 { margin-top: 0; }
+    .datos {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin: 30px 0;
+    }
+    .dato {
+      background: #ececec;
+      padding: 22px;
+      border-radius: 12px;
+      font-size: 1.6rem;
+      font-weight: bold;
+    }
+    .pregunta {
+      font-size: 1.25rem;
+      margin: 25px 0;
+    }
+    button {
+      background: #1a73e8;
+      color: white;
+      border: none;
+      padding: 14px 22px;
+      margin: 8px;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover { background: #1558b0; }
+    .oculto { display: none; }
+    .contexto {
+      margin-top: 25px;
+      padding: 25px;
+      background: #fff3cd;
+      border-radius: 12px;
+    }
+    .contexto h2 {
+      margin: 0 0 10px 0;
+      font-size: 1.8rem;
+    }
+    .contexto p {
+      margin: 0;
+      font-size: 1.25rem;
+    }
+    @media (max-width: 600px) {
+      body { padding: 15px; }
+      .contenedor { padding: 20px; }
+      .datos { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="contenedor">
+  <h1>¿Qué significan estos datos?</h1>
+
+  <div class="datos">
+    <div class="dato">128.456</div>
+    <div class="dato">20.945.897</div>
+    <div class="dato">2.300.000</div>
+    <div class="dato">4:17</div>
+  </div>
+
+  <div class="pregunta">
+    ¿De qué creéis que pueden ser estos datos?
+  </div>
+
+  <button onclick="escucharPista()">🎧 Escuchar pista</button>
+
+  <audio id="audioPista">
+    <source src="pista.mp3" type="audio/mpeg">
+  </audio>
+
+  <button onclick="mostrarContexto()">🔎 Mostrar contexto</button>
+
+  <div id="contexto" class="contexto oculto">
+    <h2>🎵 LA GRACIOSA</h2>
+    <p><strong>Quevedo ft. Elvis Crespo</strong></p>
+  </div>
+</div>
+
+<script>
+  let temporizador;
+
+  function escucharPista() {
+    const audio = document.getElementById("audioPista");
+    clearTimeout(temporizador);
+    audio.pause();
+    audio.currentTime = 0;
+
+    audio.play().catch(function(error) {
+      console.error("No se pudo reproducir el audio:", error);
+    });
+
+    temporizador = setTimeout(function() {
+      audio.pause();
+      audio.currentTime = 0;
+    }, 15000);
+  }
+
+  function mostrarContexto() {
+    const audio = document.getElementById("audioPista");
+    clearTimeout(temporizador);
+    audio.pause();
+    audio.currentTime = 0;
+    document.getElementById("contexto").classList.remove("oculto");
+  }
+</script>
+
+</body>
+</html>
