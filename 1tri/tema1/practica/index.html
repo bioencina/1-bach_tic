@@ -1,1 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Situación de aprendizaje · De los datos al beneficio</title>
+<style>
+:root{--bg:#111;--text:#f5f5f5;--accent:#f2c94c}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f4f4;color:#1b1b1b;line-height:1.6}
+header{background:#111;color:#f5f5f5;padding:56px 22px 44px}
+.wrap{max-width:1100px;margin:auto}
+h1{font-size:clamp(2rem,5vw,4rem);line-height:1.05;margin:0 0 18px}
+h2{font-size:2rem;margin-top:0}
+.lead{font-size:1.15rem;max-width:860px;color:#ddd}
+.chain{margin-top:28px;display:flex;flex-wrap:wrap;gap:8px;font-weight:700}
+.chain span{background:#f2c94c;color:#111;padding:8px 12px;border-radius:999px}
+main{padding:32px 18px 70px}
+section{background:white;max-width:1100px;margin:0 auto 24px;padding:30px;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.markets{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:18px}
+.market{border:1px solid #ddd;border-radius:12px;padding:18px;background:#fafafa}
+.market b{display:block;font-size:1.1rem;margin-bottom:5px}
+.phase{border-left:5px solid #f2c94c}
+.phase-number{font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:#555;font-size:.85rem}
+details{margin-top:16px;border:1px solid #ddd;border-radius:10px;overflow:hidden;background:#fafafa}
+summary{cursor:pointer;padding:14px 16px;font-weight:700;background:#f1f1f1;user-select:none}
+details .inside{padding:16px 18px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.btn{display:inline-block;text-decoration:none;background:#111;color:#fff;padding:11px 16px;border-radius:8px;font-weight:700}
+.btn.alt{background:#f2c94c;color:#111}
+.note{background:#fff8d8;border-left:4px solid #f2c94c;padding:14px 16px;margin:16px 0}
+.deliverables{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:18px}
+.deliver{background:#111;color:#fff;padding:20px;border-radius:12px}
+.deliver h3{color:#f2c94c}
+table{border-collapse:collapse;width:100%;margin-top:12px}
+th,td{border:1px solid #ddd;padding:10px;text-align:left;vertical-align:top}
+th{background:#f3f3f3}
+footer{text-align:center;padding:30px 20px;color:#666}
+@media (max-width:650px){section{padding:22px}h2{font-size:1.55rem}}
+</style>
+</head>
+<body>
+<header>
+<div class="wrap">
+<p style="color:#f2c94c;font-weight:700;margin:0 0 10px">SITUACIÓN DE APRENDIZAJE</p>
+<h1>¿Dónde está nuestro mercado?</h1>
+<p class="lead">Una empresa quiere lanzar una campaña en España, pero no puede invertir en todas las ciudades. Vuestro trabajo será utilizar datos reales de Google Trends para descubrir dónde existe mayor interés, convertir esos datos en conocimiento y tomar una decisión empresarial justificada.</p>
+<div class="chain"><span>DATOS</span><span>→</span><span>INFORMACIÓN</span><span>→</span><span>CONOCIMIENTO</span><span>→</span><span>DECISIÓN</span></div>
+</div>
+</header>
+<main>
+
+<section>
+<h2>1. Elegid vuestro mercado</h2>
+<p>Cada grupo trabajará con uno de estos cinco mercados:</p>
+<div class="markets">
+<div class="market"><b>Running</b>Tienda de material deportivo.</div>
+<div class="market"><b>Bicicletas eléctricas</b>Empresa que quiere ampliar sus puntos de venta.</div>
+<div class="market"><b>Skincare</b>Marca de cosmética que quiere lanzar una campaña.</div>
+<div class="market"><b>Coches eléctricos</b>Concesionario que quiere promocionar nuevos modelos.</div>
+<div class="market"><b>Placas solares</b>Empresa instaladora que busca nuevas zonas de clientes.</div>
+</div>
+<div class="note"><b>Antes de buscar:</b> escribid qué ciudades pensáis que aparecerán entre las primeras posiciones y justificad vuestra hipótesis.</div>
+</section>
+
+<section class="phase">
+<div class="phase-number">FASE 1 · DATOS</div>
+<h2>Buscad los datos en Google Trends</h2>
+<p>Configurad la búsqueda para <b>España</b> y el periodo indicado por la profesora. Localizad el apartado de interés geográfico y descargad el archivo CSV con las ciudades y su índice de interés.</p>
+<div class="actions"><a class="btn alt" href="https://trends.google.com/trends/" target="_blank" rel="noopener">Abrir Google Trends</a></div>
+<details><summary>Ver detalle de cómo hacerlo</summary><div class="inside">
+<ol>
+<li>Entrad en Google Trends.</li>
+<li>Escribid el término de vuestro mercado.</li>
+<li>Seleccionad España.</li>
+<li>Seleccionad el periodo indicado.</li>
+<li>Buscad el apartado de interés por ubicación.</li>
+<li>Comprobad que aparecen ciudades.</li>
+<li>Descargad el CSV.</li>
+<li>Anotad término buscado, periodo, fecha de consulta y fuente.</li>
+</ol>
+<p><b>Importante:</b> el valor de Trends es un índice de interés, no el número exacto de personas ni de ventas.</p>
+</div></details>
+</section>
+
+<section class="phase">
+<div class="phase-number">FASE 2 · INFORMACIÓN</div>
+<h2>Organizad los datos en una hoja de cálculo</h2>
+<p>Importad el CSV y preparad los datos para que puedan analizarse.</p>
+<details><summary>Ver los pasos que debéis realizar</summary><div class="inside">
+<ol>
+<li>Importad el archivo CSV en vuestra hoja de cálculo.</li>
+<li>Comprobad que tenéis, como mínimo, <b>Ciudad</b> e <b>Interés</b>.</li>
+<li>Ordenad las ciudades de mayor a menor interés.</li>
+<li>Añadid una columna llamada <b>Posición</b>: 1, 2, 3, 4...</li>
+<li>Calculad media, máximo, mínimo y diferencia entre máximo y mínimo.</li>
+<li>Realizad un gráfico adecuado para comparar las ciudades.</li>
+</ol>
+<p>No saquéis todavía la conclusión final. En esta fase estamos transformando datos en información comprensible.</p>
+</div></details>
+</section>
+
+<section class="phase">
+<div class="phase-number">FASE 3 · GEOGEBRA</div>
+<h2>Representad los datos y buscad una tendencia</h2>
+<p>Llevad a GeoGebra los datos del ranking. Utilizad: <b>X = posición en el ranking</b> e <b>Y = índice de interés</b>.</p>
+<div class="actions"><a class="btn alt" href="https://www.geogebra.org/classic" target="_blank" rel="noopener">Abrir GeoGebra</a></div>
+<details><summary>Ver detalle de lo que debéis hacer en GeoGebra</summary><div class="inside">
+<ol>
+<li>Preparad los pares de valores: (posición, interés).</li>
+<li>Introducidlos en GeoGebra.</li>
+<li>Representad la lista de puntos.</li>
+<li>Observad cómo desciende o se mantiene el interés al avanzar en el ranking.</li>
+<li>Obtened un <b>ajuste lineal</b>.</li>
+<li>Obtened un <b>ajuste polinómico de grado 2</b>.</li>
+<li>Guardad una captura donde aparezcan puntos y modelos.</li>
+<li>Anotad las ecuaciones obtenidas.</li>
+</ol>
+<p><b>No se trata de calcular la ecuación a mano.</b> GeoGebra realiza el ajuste; vosotros debéis interpretarlo.</p>
+</div></details>
+</section>
+
+<section class="phase">
+<div class="phase-number">FASE 4 · CONOCIMIENTO</div>
+<h2>¿Qué habéis descubierto?</h2>
+<p>Ahora debéis interpretar lo que muestran los datos y los gráficos.</p>
+<details><summary>Preguntas que debéis responder</summary><div class="inside">
+<ol>
+<li>¿Qué ciudades presentan mayor interés?</li>
+<li>¿Está el interés concentrado en pocas ciudades o repartido?</li>
+<li>¿A partir de qué posición se observa una caída clara, si existe?</li>
+<li>¿Qué ajuste representa mejor los datos: lineal o polinómico?</li>
+<li>¿Qué os permite ver GeoGebra que no era tan evidente en el CSV?</li>
+</ol>
+<p>Debéis justificar todas las afirmaciones utilizando datos, gráficos o cálculos.</p>
+</div></details>
+</section>
+
+<section class="phase">
+<div class="phase-number">FASE 5 · DECISIÓN</div>
+<h2>Tomad una decisión empresarial</h2>
+<p>Imaginad que sois el equipo que asesora a la empresa. No puede hacer campaña en todas las ciudades.</p>
+<p><b>Decidid en qué ciudades invertiríais y justificad vuestra elección.</b></p>
+<details><summary>Qué debe contener vuestra recomendación</summary><div class="inside">
+<ul>
+<li>Ciudades elegidas.</li>
+<li>Criterio utilizado para seleccionarlas.</li>
+<li>Datos que respaldan la decisión.</li>
+<li>Riesgos o limitaciones de vuestra propuesta.</li>
+</ul>
+<p>No será válida una respuesta basada únicamente en intuiciones como “Madrid es grande”. La decisión debe estar relacionada con los datos de Trends.</p>
+</div></details>
+</section>
+
+
+
+<section>
+<h2>¿Qué tenéis que entregar?</h2>
+<p>La entrega se realizará en <b>Google Classroom</b> mediante una única tarea por grupo.</p>
+<div class="deliverables">
+<div class="deliver"><h3>1. Presentación final · Google Presentaciones</h3><p>Realizad el informe final con Google Presentaciones. Debe incluir la fuente de los datos, el tratamiento realizado, los gráficos, el análisis, las conclusiones y la decisión empresarial. En la presentación debéis pegar un <b>pantallazo de GeoGebra</b> donde se vean la lista de puntos y los ajustes realizados.</p></div>
+<div class="deliver"><h3>2. Hoja de cálculo</h3><p>Debe incluir el CSV importado, el ranking, los cálculos, la tabla ordenada y los gráficos utilizados para el análisis.</p></div>
+</div>
+<div class="note"><b>Nombre recomendado:</b><br>Grupo_Nº_Tema_Apellido1-Apellido2<br>Ejemplo: <b>Grupo3_Skincare_Garcia-Lopez</b></div>
+<details><summary>¿Cómo entregar en Classroom?</summary><div class="inside">
+<ol>
+<li>Un integrante del grupo abre la tarea en Classroom.</li>
+<li>Adjunta o enlaza la <b>Presentación de Google</b> del grupo.</li>
+<li>Adjunta o enlaza la hoja de cálculo utilizada.</li>
+<li>Comprobad que en la presentación aparece un <b>pantallazo de GeoGebra</b> donde puedan verse los puntos y los ajustes realizados.</li>
+<li>Antes de entregar, comprobad que ambos archivos tienen permiso de visualización para la profesora.</li>
+</ol>
+<p><b>Consejo:</b> para evaluar mejor el trabajo individual, cada alumno puede añadir en la última diapositiva una reflexión breve: “¿Cuándo se convirtieron los datos en información y cuándo la información se convirtió en conocimiento?”</p>
+</div></details>
+</section>
+
+<section>
+<h2>Producto final</h2>
+<p>Vuestra conclusión debe poder resumirse en esta estructura:</p>
+<table>
+<tr><th>Etapa</th><th>Qué debemos demostrar</th></tr>
+<tr><td>Datos</td><td>Qué datos obtuvimos y de dónde proceden.</td></tr>
+<tr><td>Información</td><td>Cómo los organizamos, calculamos y representamos.</td></tr>
+<tr><td>Conocimiento</td><td>Qué patrón o conclusión hemos descubierto.</td></tr>
+<tr><td>Decisión</td><td>Qué proponemos hacer y por qué.</td></tr>
+</table>
+</section>
+
+</main>
+<footer>Situación de aprendizaje · TIC · De los datos al conocimiento y a la toma de decisiones</footer>
+</body>
+</html>
 
