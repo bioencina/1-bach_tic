@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Diagnóstico de un sistema digital</title>
+
+<style>
+    :root{
+        --azul:#285a7d;
+        --azul2:#3d769d;
+        --azulClaro:#eaf3f8;
+        --gris:#f4f6f8;
+        --gris2:#d9e1e6;
+        --texto:#24323d;
+        --verde:#eaf6ee;
+        --rojo:#fdeeee;
+        --amarillo:#fff7dc;
+    }
+
+    *{
+        box-sizing:border-box;
+    }
+
+    body{
+        margin:0;
+        font-family:Arial, Helvetica, sans-serif;
+        background:#eef2f5;
+        color:var(--texto);
+        line-height:1.55;
+    }
+
+    header{
+        background:var(--azul);
+        color:white;
+        padding:32px 20px;
+        text-align:center;
+    }
+
+    header h1{
+        margin:0 0 8px;
+        font-size:2rem;
+    }
+
+    header p{
+        margin:0;
+        opacity:.95;
+    }
+
+    main{
+        max-width:1100px;
+        margin:auto;
+        padding:25px;
+    }
+
+    section{
+        background:white;
+        margin-bottom:25px;
+        padding:28px;
+        border-radius:12px;
+        box-shadow:0 2px 8px rgba(0,0,0,.08);
+    }
+
+    h2{
+        color:var(--azul);
+        border-bottom:2px solid var(--azulClaro);
+        padding-bottom:8px;
+    }
+
+    h3{
+        color:#315f7e;
+        margin-top:25px;
+    }
+
+    .mision{
+        background:var(--azulClaro);
+        border-left:6px solid var(--azul);
+        padding:18px;
+        border-radius:8px;
+    }
+
+    .importante{
+        background:var(--amarillo);
+        padding:15px;
+        border-radius:8px;
+        margin:15px 0;
+    }
+
+    .pesos{
+        display:grid;
+        grid-template-columns:repeat(8,1fr);
+        gap:5px;
+        text-align:center;
+        margin:15px 0;
+    }
+
+    .peso{
+        background:var(--azulClaro);
+        border:1px solid #b7d0df;
+        padding:10px 4px;
+        border-radius:5px;
+        font-weight:bold;
+    }
+
+    table{
+        width:100%;
+        border-collapse:collapse;
+        margin:15px 0;
+    }
+
+    th{
+        background:var(--azul);
+        color:white;
+        padding:10px;
+    }
+
+    td{
+        border:1px solid var(--gris2);
+        padding:10px;
+        text-align:center;
+    }
+
+    tr:nth-child(even){
+        background:#f8fafb;
+    }
+
+    input, textarea, select{
+        width:100%;
+        padding:9px;
+        border:1px solid #aebbc4;
+        border-radius:5px;
+        font-size:1rem;
+    }
+
+    textarea{
+        min-height:90px;
+        resize:vertical;
+    }
+
+    .respuesta-corta{
+        max-width:180px;
+    }
+
+    .conversion{
+        background:var(--gris);
+        padding:18px;
+        border-radius:8px;
+        margin:15px 0;
+    }
+
+    .binario{
+        font-family:"Courier New", monospace;
+        font-size:1.25rem;
+        font-weight:bold;
+        letter-spacing:2px;
+    }
+
+    .registros{
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+        gap:12px;
+        margin:20px 0;
+    }
+
+    .registro{
+        background:#17242e;
+        color:#d9f0ff;
+        padding:18px;
+        border-radius:8px;
+        font-family:"Courier New",monospace;
+    }
+
+    .registro strong{
+        color:white;
+    }
+
+    .color-preview{
+        width:160px;
+        height:100px;
+        border:3px solid #555;
+        border-radius:8px;
+        margin:15px auto;
+        background:#ddd;
+    }
+
+    button{
+        background:var(--azul);
+        color:white;
+        border:none;
+        padding:13px 20px;
+        border-radius:7px;
+        font-size:1rem;
+        cursor:pointer;
+        margin:5px;
+    }
+
+    button:hover{
+        background:#174663;
+    }
+
+    .correcto{
+        color:#176b38;
+        font-weight:bold;
+    }
+
+    .incorrecto{
+        color:#a62929;
+        font-weight:bold;
+    }
+
+    .botonera{
+        text-align:center;
+        margin-top:25px;
+    }
+
+    .oculto{
+        display:none;
+    }
+
+    .datos-alumno{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:15px;
+    }
+
+    @media(max-width:700px){
+        .datos-alumno{
+            grid-template-columns:1fr;
+        }
+
+        .pesos{
+            grid-template-columns:repeat(4,1fr);
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Diagnóstico de un sistema digital</h1>
+    <p>Situación de aprendizaje · Información digital y sistemas de numeración</p>
+</header>
+
+<main>
+
+<!-- DATOS -->
+
+<section>
+    <h2>Identificación</h2>
+
+    <div class="datos-alumno">
+        <div>
+            <label>Nombre y apellidos</label>
+            <input id="nombre">
+        </div>
+
+        <div>
+            <label>Grupo</label>
+            <input id="grupo">
+        </div>
+    </div>
+</section>
+
+
+<!-- MISIÓN -->
+
+<section>
+    <h2>Tu misión</h2>
+
+    <div class="mision">
+        <p>
+            Formas parte del equipo encargado de diagnosticar un dispositivo digital.
+        </p>
+
+        <p>
+            El sistema ha enviado varios <strong>registros en binario</strong>.
+            El problema es que el manual técnico utiliza diferentes sistemas
+            de numeración.
+        </p>
+
+        <p>
+            Algunos códigos aparecen en <strong>decimal</strong>,
+            otros en <strong>hexadecimal</strong> y otros en
+            <strong>octal</strong>.
+        </p>
+
+        <p>
+            Para averiguar qué está ocurriendo tendrás que interpretar
+            correctamente la información recibida.
+        </p>
+    </div>
+
+    <div class="importante">
+        <strong>Regla de trabajo:</strong>
+        todas las conversiones pueden realizarse utilizando el
+        <strong>binario como sistema intermedio</strong>.
+    </div>
+</section>
+
+
+<!-- HERRAMIENTAS -->
+
+<section>
+    <h2>1. Prepara tus herramientas</h2>
+
+    <p>
+        Cada posición de un número binario tiene un peso que es una potencia de 2.
+    </p>
+
+    <div class="pesos">
+        <div class="peso">128<br>2⁷</div>
+        <div class="peso">64<br>2⁶</div>
+        <div class="peso">32<br>2⁵</div>
+        <div class="peso">16<br>2⁴</div>
+        <div class="peso">8<br>2³</div>
+        <div class="peso">4<br>2²</div>
+        <div class="peso">2<br>2¹</div>
+        <div class="peso">1<br>2⁰</div>
+    </div>
+
+    <p>
+        Si el número está en <strong>binario</strong>, suma los pesos
+        correspondientes a las posiciones que contienen un 1.
+    </p>
+
+    <p>
+        Si el número está en <strong>decimal</strong>, busca qué pesos
+        necesitas sumar y coloca un 1 en esas posiciones.
+    </p>
+
+    <div class="importante">
+        Binario ↔ Octal: grupos de <strong>3 bits</strong><br>
+        Binario ↔ Hexadecimal: grupos de <strong>4 bits</strong>
+    </div>
+</section>
+
+
+<!-- ENTRENAMIENTO -->
+
+<section>
+<h2>2. Entrenamiento</h2>
+
+<p>Realiza las siguientes conversiones antes de comenzar el diagnóstico.</p>
+
+<div class="conversion">
+    <strong>1.</strong> 45₁₀ → binario
+    <input id="e1" class="respuesta-corta">
+</div>
+
+<div class="conversion">
+    <strong>2.</strong> 101101₂ → decimal
+    <input id="e2" class="respuesta-corta">
+</div>
+
+<div class="conversion">
+    <strong>3.</strong> 111010₂ → octal
+    <input id="e3" class="respuesta-corta">
+</div>
+
+<div class="conversion">
+    <strong>4.</strong> 10101101₂ → hexadecimal
+    <input id="e4" class="respuesta-corta">
+</div>
+
+<div class="conversion">
+    <strong>5.</strong> 73₈ → binario
+    <input id="e5" class="respuesta-corta">
+</div>
+
+<div class="conversion">
+    <strong>6.</strong> 3F₁₆ → binario
+    <input id="e6" class="respuesta-corta">
+</div>
+
+<div class="conversion">
+    <strong>7.</strong> 62₁₀ → hexadecimal
+    <input id="e7" class="respuesta-corta">
+</div>
+
+<div class="conversion">
+    <strong>8.</strong> A7₁₆ → octal
+    <input id="e8" class="respuesta-corta">
+</div>
+
+</section>
+
+
+<!-- REGISTROS -->
+
+<section>
+
+<h2>3. El sistema envía estos registros</h2>
+
+<p>
+    El dispositivo ha enviado cuatro registros de 8 bits:
+</p>
+
+<div class="registros">
+
+    <div class="registro">
+        <strong>REGISTRO A</strong><br><br>
+        11010110
+    </div>
+
+    <div class="registro">
+        <strong>REGISTRO B</strong><br><br>
+        00101101
+    </div>
+
+    <div class="registro">
+        <strong>REGISTRO C</strong><br><br>
+        11111111
+    </div>
+
+    <div class="registro">
+        <strong>REGISTRO D</strong><br><br>
+        01101000
+    </div>
+
+</div>
+
+<p>
+    El manual de mantenimiento no utiliza siempre binario.
+    Tendrás que convertir los registros para identificar los mensajes.
+</p>
+
+</section>
+
+
+<!-- TABLA ERRORES -->
+
+<section>
+
+<h2>4. Consulta el manual técnico</h2>
+
+<p>
+    Esta es la tabla de códigos proporcionada por el fabricante.
+    Observa que no todos están expresados en el mismo sistema.
+</p>
+
+<table>
+<thead>
+<tr>
+    <th>Código</th>
+    <th>Sistema</th>
+    <th>Mensaje del dispositivo</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+    <td>D6</td>
+    <td>Hexadecimal</td>
+    <td>Temperatura del sistema demasiado alta</td>
+</tr>
+
+<tr>
+    <td>55</td>
+    <td>Octal</td>
+    <td>Error de comunicación con un sensor</td>
+</tr>
+
+<tr>
+    <td>255</td>
+    <td>Decimal</td>
+    <td>Valor máximo detectado</td>
+</tr>
+
+<tr>
+    <td>68</td>
+    <td>Hexadecimal</td>
+    <td>Funcionamiento normal</td>
+</tr>
+
+<tr>
+    <td>150</td>
+    <td>Octal</td>
+    <td>Reinicio solicitado por el sistema</td>
+</tr>
+
+</tbody>
+</table>
+
+<div class="importante">
+    No compares directamente números escritos en sistemas diferentes.
+    <strong>Convierte primero la información.</strong>
+</div>
+
+</section>
+
+
+<!-- DIAGNÓSTICO -->
+
+<section>
+
+<h2>5. Diagnostica los registros</h2>
+
+<h3>Registro A: 11010110₂</h3>
+
+<label>Valor decimal</label>
+<input id="aDec">
+
+<label>Valor hexadecimal</label>
+<input id="aHex">
+
+<label>¿Qué mensaje corresponde?</label>
+<textarea id="aMensaje"></textarea>
+
+
+<h3>Registro B: 00101101₂</h3>
+
+<label>Valor decimal</label>
+<input id="bDec">
+
+<label>Valor octal</label>
+<input id="bOct">
+
+<label>¿Coincide con algún código del manual? Explica tu respuesta.</label>
+<textarea id="bMensaje"></textarea>
+
+
+<h3>Registro C: 11111111₂</h3>
+
+<label>Valor decimal</label>
+<input id="cDec">
+
+<label>Valor hexadecimal</label>
+<input id="cHex">
+
+<label>¿Qué información ha enviado el dispositivo?</label>
+<textarea id="cMensaje"></textarea>
+
+
+<h3>Registro D: 01101000₂</h3>
+
+<label>Valor decimal</label>
+<input id="dDec">
+
+<label>Valor hexadecimal</label>
+<input id="dHex">
+
+<label>¿Qué mensaje corresponde?</label>
+<textarea id="dMensaje"></textarea>
+
+</section>
+
+
+<!-- RGB -->
+
+<section>
+
+<h2>6. Los registros también contienen información de color</h2>
+
+<p>
+    El sistema utiliza tres registros para controlar un indicador RGB.
+</p>
+
+<table>
+<tr>
+    <th>Componente</th>
+    <th>Binario</th>
+    <th>Hexadecimal</th>
+</tr>
+
+<tr>
+    <td>Rojo</td>
+    <td class="binario">11010110</td>
+    <td><input id="rgbR"></td>
+</tr>
+
+<tr>
+    <td>Verde</td>
+    <td class="binario">00101101</td>
+    <td><input id="rgbG"></td>
+</tr>
+
+<tr>
+    <td>Azul</td>
+    <td class="binario">01101000</td>
+    <td><input id="rgbB"></td>
+</tr>
+
+</table>
+
+<label>Código hexadecimal completo del color</label>
+<input id="codigoColor" placeholder="#______">
+
+<div id="muestraColor" class="color-preview"></div>
+
+<div class="botonera">
+<button onclick="mostrarColor()">Mostrar color calculado</button>
+</div>
+
+<h3>Reflexiona</h3>
+
+<p>
+¿Por qué resulta más cómodo representar este color mediante hexadecimal que mediante 24 bits?
+</p>
+
+<textarea id="expColor"></textarea>
+
+</section>
+
+
+<!-- OCTAL -->
+
+<section>
+
+<h2>7. Información expresada en octal</h2>
+
+<p>
+    El sistema informa de que un archivo tiene los siguientes permisos:
+</p>
+
+<p class="binario" style="text-align:center;font-size:2rem;">
+755₈
+</p>
+
+<p>
+    Convierte cada cifra octal a tres bits.
+</p>
+
+<table>
+<tr>
+    <th>Octal</th>
+    <th>Binario</th>
+</tr>
+
+<tr>
+    <td>7</td>
+    <td><input id="oct7"></td>
+</tr>
+
+<tr>
+    <td>5</td>
+    <td><input id="oct5a"></td>
+</tr>
+
+<tr>
+    <td>5</td>
+    <td><input id="oct5b"></td>
+</tr>
+
+</table>
+
+<label>Representación binaria completa</label>
+<input id="permisosBin">
+
+<p>
+¿Por qué el sistema octal resulta cómodo para representar grupos de bits?
+</p>
+
+<textarea id="expOctal"></textarea>
+
+</section>
+
+
+<!-- CONCLUSIONES -->
+
+<section>
+
+<h2>8. Conclusiones del técnico</h2>
+
+<p>
+<strong>1.</strong> ¿Qué sistema utiliza el ordenador para representar internamente la información?
+</p>
+
+<textarea id="q1"></textarea>
+
+<p>
+<strong>2.</strong> Si el ordenador trabaja con binario, ¿por qué utilizamos hexadecimal?
+</p>
+
+<textarea id="q2"></textarea>
+
+<p>
+<strong>3.</strong> ¿Qué relación existe entre binario, octal y hexadecimal?
+</p>
+
+<textarea id="q3"></textarea>
+
+<p>
+<strong>4.</strong> Un alumno afirma:
+</p>
+
+<div class="mision">
+    “Cuando escribimos AD en hexadecimal, el ordenador deja de utilizar
+    10101101 y almacena las letras A y D”.
+</div>
+
+<p>¿Es correcta esta afirmación? Justifica tu respuesta.</p>
+
+<textarea id="q4"></textarea>
+
+</section>
+
+
+<!-- GENERAR INFORME -->
+
+<section>
+
+<h2>9. Entrega</h2>
+
+<p>
+Cuando hayas terminado, genera tu informe. Se abrirá una versión preparada
+para imprimir o guardar como PDF.
+</p>
+
+<div class="botonera">
+<button onclick="generarInforme()">GENERAR INFORME</button>
+</div>
+
+</section>
+
+</main>
+
+
+<script>
+
+/* =========================================================
+   COLOR RGB
+========================================================= */
+
+function mostrarColor(){
+
+    let r = document.getElementById("rgbR").value.trim();
+    let g = document.getElementById("rgbG").value.trim();
+    let b = document.getElementById("rgbB").value.trim();
+
+    let codigo = "#" + r + g + b;
+
+    document.getElementById("codigoColor").value = codigo;
+
+    if(/^#[0-9A-Fa-f]{6}$/.test(codigo)){
+        document.getElementById("muestraColor").style.backgroundColor = codigo;
+    }
+    else{
+        alert("Introduce dos cifras hexadecimales para cada componente.");
+    }
+}
+
+
+/* =========================================================
+   OBTENER VALOR
+========================================================= */
+
+function valor(id){
+    return document.getElementById(id).value || "";
+}
+
+
+/* =========================================================
+   GENERAR INFORME
+========================================================= */
+
+function generarInforme(){
+
+    let nombre = valor("nombre");
+    let grupo = valor("grupo");
+
+    if(nombre.trim()===""){
+        alert("Introduce tu nombre y apellidos antes de generar el informe.");
+        return;
+    }
+
+    let html = `
+    <!DOCTYPE html>
+    <html lang="es">
+
+    <head>
+
+    <meta charset="UTF-8">
+
+    <title>Informe de diagnóstico</title>
+
+    <style>
+
+        body{
+            font-family:Arial, sans-serif;
+            margin:40px;
+            color:#222;
+            line-height:1.5;
+        }
+
+        h1{
+            color:#285a7d;
+            border-bottom:3px solid #285a7d;
+        }
+
+        h2{
+            color:#285a7d;
+            margin-top:30px;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin:15px 0;
+        }
+
+        th,td{
+            border:1px solid #aaa;
+            padding:8px;
+        }
+
+        th{
+            background:#eaf3f8;
+        }
+
+        .respuesta{
+            background:#f4f6f8;
+            padding:10px;
+            margin:6px 0;
+            white-space:pre-wrap;
+        }
+
+        .boton{
+            text-align:center;
+            margin:30px;
+        }
+
+        button{
+            padding:12px 20px;
+            font-size:16px;
+        }
+
+        @media print{
+            button{
+                display:none;
+            }
+        }
+
+    </style>
+
+    </head>
+
+    <body>
+
+    <h1>Informe de diagnóstico de un sistema digital</h1>
+
+    <p><strong>Alumno/a:</strong> ${nombre}</p>
+    <p><strong>Grupo:</strong> ${grupo}</p>
+
+
+    <h2>1. Ejercicios de conversión</h2>
+
+    <table>
+
+    <tr>
+        <th>Conversión</th>
+        <th>Respuesta</th>
+    </tr>
+
+    <tr><td>45 decimal → binario</td><td>${valor("e1")}</td></tr>
+    <tr><td>101101 binario → decimal</td><td>${valor("e2")}</td></tr>
+    <tr><td>111010 binario → octal</td><td>${valor("e3")}</td></tr>
+    <tr><td>10101101 binario → hexadecimal</td><td>${valor("e4")}</td></tr>
+    <tr><td>73 octal → binario</td><td>${valor("e5")}</td></tr>
+    <tr><td>3F hexadecimal → binario</td><td>${valor("e6")}</td></tr>
+    <tr><td>62 decimal → hexadecimal</td><td>${valor("e7")}</td></tr>
+    <tr><td>A7 hexadecimal → octal</td><td>${valor("e8")}</td></tr>
+
+    </table>
+
+
+    <h2>2. Diagnóstico</h2>
+
+    <h3>Registro A — 11010110</h3>
+
+    <p>Decimal: ${valor("aDec")}</p>
+    <p>Hexadecimal: ${valor("aHex")}</p>
+    <div class="respuesta">${valor("aMensaje")}</div>
+
+
+    <h3>Registro B — 00101101</h3>
+
+    <p>Decimal: ${valor("bDec")}</p>
+    <p>Octal: ${valor("bOct")}</p>
+    <div class="respuesta">${valor("bMensaje")}</div>
+
+
+    <h3>Registro C — 11111111</h3>
+
+    <p>Decimal: ${valor("cDec")}</p>
+    <p>Hexadecimal: ${valor("cHex")}</p>
+    <div class="respuesta">${valor("cMensaje")}</div>
+
+
+    <h3>Registro D — 01101000</h3>
+
+    <p>Decimal: ${valor("dDec")}</p>
+    <p>Hexadecimal: ${valor("dHex")}</p>
+    <div class="respuesta">${valor("dMensaje")}</div>
+
+
+    <h2>3. Color digital</h2>
+
+    <p>
+        R = ${valor("rgbR")} ·
+        G = ${valor("rgbG")} ·
+        B = ${valor("rgbB")}
+    </p>
+
+    <p><strong>Código:</strong> ${valor("codigoColor")}</p>
+
+    <div class="respuesta">${valor("expColor")}</div>
+
+
+    <h2>4. Sistema octal</h2>
+
+    <p>
+        7 → ${valor("oct7")}<br>
+        5 → ${valor("oct5a")}<br>
+        5 → ${valor("oct5b")}
+    </p>
+
+    <p>
+        <strong>755 octal en binario:</strong>
+        ${valor("permisosBin")}
+    </p>
+
+    <div class="respuesta">${valor("expOctal")}</div>
+
+
+    <h2>5. Conclusiones</h2>
+
+    <p><strong>¿Qué sistema utiliza internamente el ordenador?</strong></p>
+    <div class="respuesta">${valor("q1")}</div>
+
+    <p><strong>¿Por qué utilizamos hexadecimal?</strong></p>
+    <div class="respuesta">${valor("q2")}</div>
+
+    <p><strong>Relación entre binario, octal y hexadecimal</strong></p>
+    <div class="respuesta">${valor("q3")}</div>
+
+    <p><strong>¿El ordenador almacena las letras A y D?</strong></p>
+    <div class="respuesta">${valor("q4")}</div>
+
+
+    <div class="boton">
+        <button onclick="window.print()">
+            IMPRIMIR / GUARDAR COMO PDF
+        </button>
+    </div>
+
+    </body>
+    </html>
+    `;
+
+    let ventana = window.open("", "_blank");
+
+    ventana.document.open();
+    ventana.document.write(html);
+    ventana.document.close();
+}
+
+</script>
+
+</body>
+</html>
