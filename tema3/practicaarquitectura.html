@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Montar un equipo · 1.º Bachillerato</title>
+<style>
+:root{--azul:#17365d;--azul2:#24558a;--claro:#eef4fa;--borde:#c8d3df;--texto:#17202a;--verde:#eaf6ee}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;color:var(--texto);line-height:1.5}
+header{background:var(--azul);color:#fff;padding:30px 20px}
+header .wrap,main{max-width:1100px;margin:auto}
+h1{margin:0 0 8px;font-size:2rem} h2{color:var(--azul);margin-top:32px}
+h3{color:var(--azul2);margin-bottom:8px}
+main{background:#fff;padding:28px;margin-top:24px;margin-bottom:40px;border-radius:14px;box-shadow:0 2px 12px #0001}
+.reto{background:var(--claro);border-left:6px solid var(--azul2);padding:18px;border-radius:8px}
+.aviso{background:#fff8df;border-left:5px solid #d4a017;padding:14px;margin:18px 0}
+.componente{border:1px solid var(--borde);border-radius:12px;padding:20px;margin:22px 0;background:#fff}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.full{grid-column:1/-1}
+label{font-weight:700;display:block;margin-bottom:5px}
+input,textarea{width:100%;padding:10px;border:1px solid #aebbc8;border-radius:7px;font:inherit;background:#fff}
+textarea{min-height:92px;resize:vertical}
+.url{font-family:Consolas,monospace}
+small{display:block;color:#536273;margin-top:4px}
+table{width:100%;border-collapse:collapse;margin:14px 0}
+th,td{border:1px solid var(--borde);padding:10px;vertical-align:top}
+th{background:var(--claro);color:var(--azul)}
+.mag{background:var(--verde);padding:15px;border-radius:9px}
+.botones{display:flex;gap:10px;flex-wrap:wrap;margin-top:25px}
+button{border:0;border-radius:8px;padding:11px 16px;font-weight:700;cursor:pointer;background:var(--azul);color:white}
+button.sec{background:#596775}
+@media(max-width:720px){.grid{grid-template-columns:1fr}.full{grid-column:auto}main{margin:0;border-radius:0}}
+@media print{body{background:white}header{padding:15px}main{box-shadow:none;margin:0}.botones{display:none}.componente{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<h1>Reto práctico: montar un equipo</h1>
+<p>1.º Bachillerato · Arquitectura de computadores</p>
+</div></header>
+
+<main>
+<section class="reto">
+<h2 style="margin-top:0">El reto</h2>
+<p>Vas a diseñar un ordenador seleccionando componentes reales. No se trata de elegir piezas al azar: debes <strong>investigar sus características técnicas, explicar qué significan y justificar por qué las has elegido</strong>.</p>
+<p>Además, tendrás que demostrar que los componentes seleccionados <strong>son compatibles entre sí</strong>.</p>
+</section>
+
+<div class="aviso"><strong>Importante:</strong> puedes copiar y pegar las URL de las páginas que consultes en todos los campos de enlace. No basta con copiar especificaciones: debes interpretarlas.</div>
+
+<h2>Antes de empezar: entiende las unidades</h2>
+<div class="mag">
+<table>
+<tr><th>Unidad</th><th>Qué expresa</th><th>Ejemplo</th></tr>
+<tr><td>Hz, MHz, GHz</td><td>Frecuencia</td><td>CPU a 4,2 GHz</td></tr>
+<tr><td>GB, TB</td><td>Capacidad</td><td>16 GB de RAM; SSD de 1 TB</td></tr>
+<tr><td>MB/s, GB/s</td><td>Transferencia de datos</td><td>Lectura de un SSD</td></tr>
+<tr><td>W</td><td>Potencia</td><td>Fuente de 650 W</td></tr>
+</table>
+<p><strong>Recuerda:</strong> una cifra grande no implica por sí sola que un componente sea mejor. Hay que saber qué mide y cómo afecta al equipo.</p>
+</div>
+
+<div id="componentes"></div>
+
+<h2>Compatibilidad del equipo</h2>
+<table>
+<tr><th>Debes comprobar</th><th>Explica cómo lo has comprobado</th></tr>
+<tr><td>CPU ↔ placa base: socket y compatibilidad</td><td><textarea data-save="comp_cpu"></textarea></td></tr>
+<tr><td>RAM ↔ placa base: DDR, capacidad y configuración admitida</td><td><textarea data-save="comp_ram"></textarea></td></tr>
+<tr><td>SSD ↔ placa base: interfaz y conexión disponible</td><td><textarea data-save="comp_ssd"></textarea></td></tr>
+<tr><td>GPU ↔ placa/caja/fuente: PCIe, dimensiones, alimentación y potencia</td><td><textarea data-save="comp_gpu"></textarea></td></tr>
+<tr><td>Placa base ↔ caja: formato</td><td><textarea data-save="comp_caja"></textarea></td></tr>
+<tr><td>Refrigeración ↔ CPU/caja</td><td><textarea data-save="comp_refri"></textarea></td></tr>
+</table>
+
+<h2>Conclusiones</h2>
+<div class="grid">
+<div><label>Precio total aproximado del equipo (€)</label><input data-save="total" type="number" step="0.01"></div>
+<div><label>¿Qué componente consideras más importante para el rendimiento de tu equipo? ¿Por qué?</label><textarea data-save="rendimiento"></textarea></div>
+<div class="full"><label>¿Qué componente mejorarías si quisieras aumentar el rendimiento? Explica qué característica técnica cambiarías.</label><textarea data-save="mejora"></textarea></div>
+<div class="full"><label>Explica con tus palabras la diferencia entre capacidad, frecuencia y velocidad de transferencia.</label><textarea data-save="magnitudes"></textarea></div>
+</div>
+
+<div class="botones">
+<button onclick="window.print()">Imprimir / guardar como PDF</button>
+<button class="sec" onclick="borrar()">Borrar respuestas</button>
+</div>
+</main>
+
+<script>
+const datos = [
+["CPU / Procesador",
+ [["Modelo","text"],["Núcleos / hilos","text"],["Frecuencia base","text"],["Frecuencia máxima/turbo","text"],["Socket","text"],["Consumo / TDP","text"],["Precio (€)","number"]],
+ "Explica qué significan los GHz, los núcleos y los hilos de este procesador y por qué has elegido este modelo."],
+["Placa base",
+ [["Modelo","text"],["Socket","text"],["Chipset","text"],["Formato (ATX, micro-ATX...)","text"],["RAM admitida","text"],["Capacidad máxima de RAM","text"],["Ranuras / conexiones relevantes","text"],["Precio (€)","number"]],
+ "Describe las características técnicas de la placa y justifica por qué es adecuada para el resto del equipo."],
+["Memoria RAM",
+ [["Modelo","text"],["Capacidad total (GB)","text"],["Número de módulos","text"],["Tipo (DDR4/DDR5...)","text"],["Velocidad / frecuencia indicada","text"],["Precio (€)","number"]],
+ "Explica qué representa la capacidad en GB, qué representa su velocidad y por qué has elegido esa cantidad de memoria."],
+["Almacenamiento SSD",
+ [["Modelo","text"],["Capacidad (GB/TB)","text"],["Tipo (SATA/NVMe...)","text"],["Interfaz","text"],["Lectura (MB/s)","text"],["Escritura (MB/s)","text"],["Precio (€)","number"]],
+ "Explica la diferencia entre capacidad y velocidad de lectura/escritura y justifica la elección."],
+["Tarjeta gráfica / GPU",
+ [["Modelo","text"],["VRAM (GB)","text"],["Tipo de memoria","text"],["Interfaz / PCIe","text"],["Conectores de vídeo","text"],["Consumo o potencia recomendada","text"],["Precio (€)","number"]],
+ "Explica para qué sirve la VRAM, qué capacidad tiene y por qué esta GPU es adecuada para tu equipo."],
+["Fuente de alimentación",
+ [["Modelo","text"],["Potencia (W)","text"],["Certificación / eficiencia","text"],["Conectores relevantes","text"],["Precio (€)","number"]],
+ "Explica qué representan los vatios y por qué la fuente elegida puede alimentar correctamente el equipo."],
+["Caja",
+ [["Modelo","text"],["Formato de placa admitido","text"],["Longitud máxima de GPU","text"],["Opciones de ventilación","text"],["Precio (€)","number"]],
+ "Justifica que físicamente caben los componentes y que la caja permite una refrigeración adecuada."],
+["Refrigeración",
+ [["Modelo / tipo","text"],["Compatibilidad / socket","text"],["Características técnicas","text"],["Precio (€)","number"]],
+ "Explica por qué el sistema de refrigeración es adecuado para el procesador y para el uso previsto."]
+];
+
+const cont = document.getElementById("componentes");
+datos.forEach((c,ci)=>{
+ let s=document.createElement("section"); s.className="componente";
+ let campos=c[1].map((x,i)=>`<div><label>${x[0]}</label><input type="${x[1]}" step="${x[1]=='number'?'0.01':''}" data-save="c${ci}_${i}"></div>`).join("");
+ s.innerHTML=`<h2>${ci+1}. ${c[0]}</h2>
+ <div class="grid">${campos}
+ <div class="full"><label>URL del producto / fuente consultada</label>
+ <input class="url" type="url" placeholder="Pega aquí la URL completa" data-save="url_${ci}">
+ <small>Puedes copiar la dirección desde el navegador y pegarla directamente aquí.</small></div>
+ <div class="full"><label>Descripción y justificación</label><textarea data-save="just_${ci}" placeholder="${c[2]}"></textarea></div>
+ </div>`;
+ cont.appendChild(s);
+});
+
+document.querySelectorAll("[data-save]").forEach(el=>{
+ const k="montar1bach_"+el.dataset.save;
+ if(localStorage.getItem(k)!==null) el.value=localStorage.getItem(k);
+ el.addEventListener("input",()=>localStorage.setItem(k,el.value));
+});
+function borrar(){
+ if(confirm("¿Quieres borrar todas las respuestas guardadas?")){
+  document.querySelectorAll("[data-save]").forEach(el=>{localStorage.removeItem("montar1bach_"+el.dataset.save);el.value=""});
+ }
+}
+</script>
+</body>
+</html>
