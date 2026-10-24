@@ -30,6 +30,10 @@ th{background:var(--claro);color:var(--azul)}
 .botones{display:flex;gap:10px;flex-wrap:wrap;margin-top:25px}
 button{border:0;border-radius:8px;padding:11px 16px;font-weight:700;cursor:pointer;background:var(--azul);color:white}
 button.sec{background:#596775}
+button.entrega{background:#18733f;font-size:1.05rem;padding:14px 20px}
+button.importar{background:#24558a}
+.entrega-dia{background:#eaf6ee;border-left:6px solid #27864c;padding:18px;border-radius:8px;margin:18px 0}
+.identificacion{background:#f5f8fc;border:1px solid var(--borde);padding:18px;border-radius:10px;margin:18px 0}
 @media(max-width:720px){.grid{grid-template-columns:1fr}.full{grid-column:auto}main{margin:0;border-radius:0}}
 @media print{body{background:white}header{padding:15px}main{box-shadow:none;margin:0}.botones{display:none}.componente{break-inside:avoid}}
 </style>
@@ -41,13 +45,51 @@ button.sec{background:#596775}
 </div></header>
 
 <main>
+
+<section class="identificacion">
+  <h2 style="margin-top:0">Datos del alumno/a</h2>
+  <div class="grid">
+    <div class="full">
+      <label for="alumno_nombre">Nombre y apellidos</label>
+      <input id="alumno_nombre" type="text" data-save="alumno_nombre"
+             placeholder="Escribe tu nombre y apellidos" autocomplete="off">
+    </div>
+    <div>
+      <label for="alumno_grupo">Grupo</label>
+      <input id="alumno_grupo" type="text" data-save="alumno_grupo"
+             placeholder="Ej.: 1.º Bach A" autocomplete="off">
+    </div>
+  </div>
+</section>
+
+<section class="entrega-dia">
+  <h2 style="margin-top:0">Entrega al final de cada clase</h2>
+  <p><strong>Antes de terminar la clase debes guardar y entregar una copia de todo el trabajo realizado hasta ese momento.</strong></p>
+  <p>1. Pulsa <strong>Exportar trabajo del día</strong>.<br>
+     2. Se descargará un archivo <strong>.json</strong> con tu trabajo acumulado.<br>
+     3. Entrega ese archivo en la tarea de Classroom.<br>
+     4. En la siguiente clase, usa <strong>Importar última copia</strong> para recuperar el trabajo y continuar.</p>
+  <p><strong>Importante:</strong> puedes copiar y pegar únicamente en los campos de URL. El resto de respuestas debes escribirlas tú.</p>
+  <div class="botones">
+    <button class="entrega" type="button" onclick="exportarTrabajo()">⬇ Exportar trabajo del día</button>
+    <button class="importar" type="button" onclick="document.getElementById('archivoImportar').click()">⬆ Importar última copia</button>
+    <input id="archivoImportar" type="file" accept=".json,application/json" hidden>
+  </div>
+</section>
+
+
+<div class="aviso">
+  <strong>Entrega final:</strong> los archivos JSON son las copias del trabajo de cada día.
+  <strong>Cuando hayas terminado toda la práctica, debes pulsar «TRABAJO FINAL: guardar como PDF y entregar en Classroom» y entregar ese PDF como trabajo definitivo.</strong>
+</div>
+
 <section class="reto">
 <h2 style="margin-top:0">El reto</h2>
 <p>Vas a diseñar un ordenador seleccionando componentes reales. No se trata de elegir piezas al azar: debes <strong>investigar sus características técnicas, explicar qué significan y justificar por qué las has elegido</strong>.</p>
 <p>Además, tendrás que demostrar que los componentes seleccionados <strong>son compatibles entre sí</strong>.</p>
 </section>
 
-<div class="aviso"><strong>Importante:</strong> puedes copiar y pegar las URL de las páginas que consultes en todos los campos de enlace. No basta con copiar especificaciones: debes interpretarlas.</div>
+<div class="aviso"><strong>Importante:</strong> solo puedes copiar y pegar en los campos de URL de las fuentes consultadas. Las características, explicaciones, compatibilidades y conclusiones debes escribirlas tú. No basta con copiar especificaciones: debes interpretarlas.</div>
 
 <h2>Antes de empezar: entiende las unidades</h2>
 <div class="mag">
@@ -83,7 +125,9 @@ button.sec{background:#596775}
 </div>
 
 <div class="botones">
-<button onclick="window.print()">Imprimir / guardar como PDF</button>
+<button class="entrega" type="button" onclick="exportarTrabajo()">⬇ Exportar trabajo del día</button>
+<button class="importar" type="button" onclick="document.getElementById('archivoImportar').click()">⬆ Importar última copia</button>
+<button onclick="window.print()">📄 TRABAJO FINAL: guardar como PDF y entregar en Classroom</button>
 <button class="sec" onclick="borrar()">Borrar respuestas</button>
 </div>
 </main>
@@ -135,6 +179,78 @@ document.querySelectorAll("[data-save]").forEach(el=>{
  if(localStorage.getItem(k)!==null) el.value=localStorage.getItem(k);
  el.addEventListener("input",()=>localStorage.setItem(k,el.value));
 });
+
+// Solo se permite copiar/pegar en los campos de URL.
+document.addEventListener("copy", bloquearCopiarPegar);
+document.addEventListener("cut", bloquearCopiarPegar);
+document.addEventListener("paste", bloquearCopiarPegar);
+
+function esCampoURL(el){
+  return el && el.matches && el.matches('input[type="url"], .url');
+}
+function bloquearCopiarPegar(e){
+  if(!esCampoURL(e.target)){
+    e.preventDefault();
+    alert("En este campo debes escribir la respuesta. Copiar y pegar solo está permitido en las URL.");
+  }
+}
+
+function recogerTrabajo(){
+  const respuestas = {};
+  document.querySelectorAll("[data-save]").forEach(el=>{
+    respuestas[el.dataset.save] = el.value;
+  });
+  return {
+    actividad: "Reto práctico: montar un equipo",
+    nombre: document.getElementById("alumno_nombre").value.trim(),
+    grupo: document.getElementById("alumno_grupo").value.trim(),
+    fechaExportacion: new Date().toLocaleString("es-ES"),
+    respuestas
+  };
+}
+
+function exportarTrabajo(){
+  const nombre = document.getElementById("alumno_nombre").value.trim();
+  const grupo = document.getElementById("alumno_grupo").value.trim();
+
+  if(!nombre || !grupo){
+    alert("Antes de exportar debes escribir tu nombre y apellidos y tu grupo.");
+    (!nombre ? document.getElementById("alumno_nombre") : document.getElementById("alumno_grupo")).focus();
+    return;
+  }
+
+  const trabajo = recogerTrabajo();
+  const blob = new Blob([JSON.stringify(trabajo, null, 2)], {type:"application/json"});
+  const enlace = document.createElement("a");
+  const nombreSeguro = nombre.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ_-]+/g,"_");
+  const grupoSeguro = grupo.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ_-]+/g,"_");
+  const fecha = new Date().toISOString().slice(0,10);
+  enlace.href = URL.createObjectURL(blob);
+  enlace.download = `arquitectura_${grupoSeguro}_${nombreSeguro}_${fecha}.json`;
+  enlace.click();
+  URL.revokeObjectURL(enlace.href);
+}
+
+document.getElementById("archivoImportar").addEventListener("change", async function(){
+  const archivo = this.files[0];
+  if(!archivo) return;
+  try{
+    const trabajo = JSON.parse(await archivo.text());
+    const respuestas = trabajo.respuestas || trabajo;
+    document.querySelectorAll("[data-save]").forEach(el=>{
+      if(Object.prototype.hasOwnProperty.call(respuestas, el.dataset.save)){
+        el.value = respuestas[el.dataset.save] ?? "";
+        localStorage.setItem("montar1bach_"+el.dataset.save, el.value);
+      }
+    });
+    alert("Copia importada correctamente. Puedes continuar trabajando.");
+  }catch(err){
+    alert("No se ha podido importar la copia. Comprueba que es el archivo JSON de esta práctica.");
+  }
+  this.value="";
+});
+
+
 function borrar(){
  if(confirm("¿Quieres borrar todas las respuestas guardadas?")){
   document.querySelectorAll("[data-save]").forEach(el=>{localStorage.removeItem("montar1bach_"+el.dataset.save);el.value=""});
