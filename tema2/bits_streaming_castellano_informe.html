@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>De los bits al streaming</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8;color:#222;line-height:1.6}
+header{background:#263238;color:#fff;padding:34px 20px;text-align:center}
+header h1{margin:0;font-size:2.15rem}
+header p{max-width:900px;margin:12px auto 0}
+main{max-width:1000px;margin:auto;padding:24px}
+section{background:#fff;margin-bottom:24px;padding:25px;border-radius:12px;box-shadow:0 2px 8px #0002}
+h2{color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:8px}
+h3{color:#37474f}
+.idea,.ejemplo,.ejercicio,.reto{padding:16px;margin:18px 0;border-left:5px solid}
+.idea{background:#e3f2fd;border-color:#1976d2}
+.ejemplo{background:#fff8e1;border-color:#f9a825}
+.ejercicio{background:#f1f8e9;border-color:#689f38}
+.reto{background:#f3e5f5;border-color:#8e24aa}
+.bits{font-family:Consolas,monospace;background:#263238;color:#9ccc65;padding:15px;border-radius:8px;font-size:1.08rem;overflow-wrap:anywhere}
+textarea,input,select{width:100%;padding:10px;margin:6px 0 15px;border:1px solid #bbb;border-radius:6px;font-size:1rem}
+textarea{min-height:85px;resize:vertical}
+button{background:#1565c0;color:#fff;border:0;padding:10px 17px;border-radius:7px;cursor:pointer;margin:4px;font-size:1rem}
+button:hover{background:#0d47a1}
+.resultado{background:#eceff1;padding:15px;border-radius:7px;margin:10px 0;min-height:48px}
+table{width:100%;border-collapse:collapse;margin:15px 0}
+th,td{border:1px solid #ccc;padding:10px;text-align:left}
+th{background:#eceff1}
+.flujo{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:9px;margin:24px 0}
+.caja{background:#1565c0;color:#fff;padding:13px;border-radius:8px;text-align:center;min-width:120px}
+.flecha{font-size:1.7rem;font-weight:bold}
+.opciones{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:15px 0}
+.opciones button{min-height:55px}
+.aviso{font-size:.92rem;color:#555}
+.correcto{color:#2e7d32;font-weight:bold}
+.error{color:#c62828;font-weight:bold}
+</style>
+
+<style id="printStyles">
+.datos-alumno{background:#fff3e0;border-left:5px solid #ef6c00;padding:18px;margin:18px 0}
+.barra-informe{position:sticky;bottom:0;background:#263238;color:white;padding:14px;text-align:center;z-index:10;box-shadow:0 -2px 8px #0003}
+.barra-informe button{background:#2e7d32;font-weight:bold}
+.solo-informe{display:none}
+@media print{
+  body{background:white;font-size:11pt}
+  header{padding:18px;background:white!important;color:black!important;border-bottom:2px solid #333}
+  main{max-width:none;padding:0}
+  section{box-shadow:none;border:1px solid #bbb;break-inside:avoid;margin:10px 0;padding:14px}
+  .barra-informe, button{display:none!important}
+  .solo-informe{display:block}
+  textarea,input,select{border:0;border-bottom:1px solid #999;border-radius:0;padding:4px;background:white!important;color:black!important}
+  textarea{min-height:45px}
+  .bits{background:#eee!important;color:black!important;border:1px solid #aaa}
+  .caja{background:#eee!important;color:black!important;border:1px solid #777}
+  .idea,.ejemplo,.ejercicio,.reto{background:white!important;color:black!important}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+
+</head>
+<body>
+
+<header>
+<h1>De los bits al streaming</h1>
+<p>Representación de la información, codificación, compresión, códec, bitrate y transmisión de vídeo.</p>
+</header>
+
+<main>
+
+<section class="datos-alumno">
+<h2>Datos del alumno / alumna</h2>
+<div class="darija-extra" style="display:none" dir="rtl" lang="ar"><h3>معلومات التلميذ / التلميذة</h3></div>
+<label><strong>Nombre y apellidos</strong></label>
+<input id="nombreAlumno" type="text" placeholder="Nombre y apellidos">
+<label><strong>Grupo</strong></label>
+<input id="grupoAlumno" type="text" placeholder="Grupo">
+<p class="aviso">Completa la práctica y, al finalizar, pulsa <strong>Generar informe PDF</strong>. Se abrirá la ventana de impresión del navegador. Selecciona <strong>Guardar como PDF</strong>.</p>
+</section>
+
+
+<section>
+<h2>1. Todo termina siendo 0 y 1</h2>
+<p>Un ordenador almacena la información mediante <strong>bits</strong>. Una secuencia de bits no nos dice por sí sola si representa una letra, una imagen, un sonido o parte de un vídeo.</p>
+<div class="bits">01001000 01101111 01101100 01100001</div>
+<div class="idea"><strong>Idea fundamental:</strong> además de los bits necesitamos conocer las reglas utilizadas para interpretarlos.</div>
+</section>
+
+<section>
+<h2>2. Codificación de caracteres</h2>
+<p>Una <strong>codificación</strong> establece cómo se representan los caracteres mediante valores numéricos y, finalmente, mediante bits.</p>
+<table>
+<tr><th>Codificación</th><th>Idea básica</th></tr>
+<tr><td>ASCII</td><td>Conjunto histórico y reducido de caracteres.</td></tr>
+<tr><td>UTF-8</td><td>Codificación actual capaz de representar caracteres de multitud de idiomas.</td></tr>
+<tr><td>Windows-1252</td><td>Muy utilizada históricamente en Windows occidental.</td></tr>
+<tr><td>ISO-8859-1</td><td>Codificación de un byte para caracteres de Europa occidental.</td></tr>
+</table>
+
+<div class="ejercicio">
+<h3>Ejercicio 1 — ¿Con qué código se interpreta correctamente?</h3>
+
+<p>Un archivo contiene una secuencia de bytes. Tu programa puede intentar interpretarlos utilizando distintas codificaciones.</p>
+
+<div class="bits">45 73 70 61 C3 B1 61 20 65 73 74 C3 A1 20 70 72 65 70 61 72 61 64 61</div>
+
+<p><strong>Prueba las distintas codificaciones</strong> pulsando los botones. Observa qué resultado produce cada una y decide cuál muestra correctamente el mensaje.</p>
+
+<div class="opciones">
+<button onclick="probarCodigo('ascii')">Probar ASCII</button>
+<button onclick="probarCodigo('utf8')">Probar UTF-8</button>
+<button onclick="probarCodigo('win')">Probar Windows-1252</button>
+<button onclick="probarCodigo('iso')">Probar ISO-8859-1</button>
+</div>
+
+<div class="resultado" id="resultadoCodigo">Todavía no has probado ninguna codificación.</div>
+
+<label><strong>¿Qué codificación produce los caracteres correctos?</strong></label>
+<select id="codigoElegido">
+<option value="">Selecciona...</option>
+<option value="ascii">ASCII</option>
+<option value="utf8">UTF-8</option>
+<option value="win">Windows-1252</option>
+<option value="iso">ISO-8859-1</option>
+</select>
+
+<button onclick="comprobarCodigo()">Comprobar conclusión</button>
+<div class="resultado" id="conclusionCodigo"></div>
+
+<label><strong>Explica qué has descubierto. ¿Han cambiado los bytes al pulsar los botones?</strong></label>
+<textarea placeholder="Escribe tu explicación..."></textarea>
+</div>
+</section>
+
+<section>
+<h2>3. Compresión</h2>
+<p><strong>Comprimir</strong> significa representar la información utilizando menos datos. La compresión puede ser <strong>sin pérdida</strong>, si podemos reconstruir exactamente el original, o <strong>con pérdida</strong>, si se elimina parte de la información.</p>
+
+<div class="ejemplo">
+<strong>Idea simplificada:</strong><br>
+AAAAAAAAAABBBBBBBBCCCCCC<br>
+podría describirse como<br>
+<strong>10A 8B 6C</strong>
+</div>
+
+<p>Los sistemas reales, como ZIP, utilizan técnicas mucho más elaboradas, pero esta idea permite comprender que la compresión intenta aprovechar patrones y redundancias.</p>
+
+<div class="ejercicio">
+<h3>Ejercicio 2 — Diseña y evalúa tu propio sistema de compresión</h3>
+
+<p><strong>Secuencia A:</strong></p>
+<div class="bits" id="secuenciaA">AAAAAAAABBBBBCCCCCCCCDDABABABABABABAB</div>
+
+<p>Diseña una forma de representar esta secuencia con menos caracteres, pero recuerda una condición:</p>
+<div class="idea"><strong>Otra persona debe poder reconstruir exactamente la secuencia original.</strong></div>
+
+<label>Representación comprimida:</label>
+<input id="compA" placeholder="Escribe aquí tu representación...">
+<button onclick="evaluarA()">Calcular reducción</button>
+<div class="resultado" id="resA"></div>
+
+<label>Explica las reglas de tu sistema de compresión:</label>
+<textarea placeholder="Por ejemplo: qué significa cada número, letra o símbolo que hayas utilizado..."></textarea>
+
+<hr>
+
+<h3>Ahora prueba tu método con otros datos</h3>
+
+<p><strong>Secuencia B:</strong></p>
+<div class="bits" id="secuenciaB">QWERTYUIOPASDFGHJKLZXCVBNM</div>
+
+<p>Intenta aplicar el mismo tipo de estrategia.</p>
+<input id="compB" placeholder="Representación comprimida de la secuencia B...">
+<button onclick="evaluarB()">Calcular reducción</button>
+<div class="resultado" id="resB"></div>
+
+<label><strong>Compara los dos resultados. ¿Por qué un método puede comprimir muy bien unos datos y apenas comprimir otros?</strong></label>
+<textarea placeholder="Razona tu respuesta..."></textarea>
+</div>
+</section>
+
+<section>
+<h2>4. Vídeo y códec</h2>
+<p>Un vídeo contiene una enorme cantidad de información. Para reducirla se utilizan <strong>códecs</strong>.</p>
+<div class="idea"><strong>Códec:</strong> conjunto de reglas y algoritmos utilizados para codificar/comprimir y decodificar el contenido.</div>
+<p>Algunos ejemplos son H.264, H.265, VP9 y AV1.</p>
+<div class="ejemplo">Entre dos fotogramas consecutivos puede haber grandes zonas que apenas cambian. Un sistema de compresión de vídeo puede aprovechar estas semejanzas en lugar de almacenar cada fotograma como si fuera completamente independiente.</div>
+</section>
+
+<section>
+<h2>5. Bitrate</h2>
+<p>El <strong>bitrate</strong> indica la cantidad de bits utilizada por unidad de tiempo. En vídeo suele expresarse en <strong>Mbps (megabits por segundo)</strong>.</p>
+
+<div class="idea">
+Si conocemos el bitrate y la duración podemos estimar cuánta información contiene el vídeo.<br><br>
+<strong>cantidad de datos = bitrate × tiempo</strong><br>
+<strong>8 bits = 1 byte</strong>
+</div>
+
+<div class="ejercicio">
+<h3>Ejercicio 3 — Elige qué vídeo enviar</h3>
+
+<p>Una plataforma dispone de tres versiones de un mismo vídeo de <strong>10 minutos</strong>.</p>
+
+<table>
+<tr><th>Versión</th><th>Bitrate</th></tr>
+<tr><td>A</td><td>2 Mbps</td></tr>
+<tr><td>B</td><td>5 Mbps</td></tr>
+<tr><td>C</td><td>12 Mbps</td></tr>
+</table>
+
+<p><strong>Primero calcula.</strong> Recuerda que 10 minutos = 600 segundos.</p>
+
+<table>
+<tr><th>Versión</th><th>Total en megabits</th><th>Tamaño aproximado en MB</th></tr>
+<tr><td>A</td><td><input id="aMb" type="number"></td><td><input id="aMB" type="number"></td></tr>
+<tr><td>B</td><td><input id="bMb" type="number"></td><td><input id="bMB" type="number"></td></tr>
+<tr><td>C</td><td><input id="cMb" type="number"></td><td><input id="cMB" type="number"></td></tr>
+</table>
+
+<button onclick="comprobarCalculos()">Comprobar cálculos</button>
+<div class="resultado" id="resCalculos"></div>
+
+<h3>Ahora toma una decisión</h3>
+
+<p>El usuario dispone en este momento de una conexión de aproximadamente <strong>8 Mbps</strong>.</p>
+
+<label>¿Qué versión elegirías para reproducir el vídeo por streaming?</label>
+<select id="eleccionVideo">
+<option value="">Selecciona...</option>
+<option value="A">A — 2 Mbps</option>
+<option value="B">B — 5 Mbps</option>
+<option value="C">C — 12 Mbps</option>
+</select>
+
+<label>Justifica tu elección:</label>
+<textarea placeholder="No basta con indicar una letra. Relaciona bitrate, conexión y cantidad de datos."></textarea>
+
+<div class="reto">
+<strong>La situación cambia:</strong> durante 20 segundos la conexión baja de 8 Mbps a solo <strong>3 Mbps</strong>.<br><br>
+¿Qué podría ocurrir si estamos viendo la versión B de 5 Mbps?
+</div>
+
+<textarea placeholder="Razona qué ocurre si el reproductor necesita 5 Mb cada segundo pero durante un tiempo solo recibe unos 3 Mb por segundo..."></textarea>
+
+<label><strong>¿Qué soluciones podría utilizar una plataforma de streaming?</strong></label>
+<textarea placeholder="Piensa en almacenar datos temporalmente o cambiar la versión del vídeo..."></textarea>
+</div>
+</section>
+
+<section>
+<h2>6. Streaming y buffer</h2>
+<p>En <strong>streaming</strong> el dispositivo puede comenzar a reproducir el contenido sin esperar a que se descargue el archivo completo.</p>
+
+<div class="flujo">
+<div class="caja">Servidor</div><div class="flecha">→</div>
+<div class="caja">Internet</div><div class="flecha">→</div>
+<div class="caja">Buffer</div><div class="flecha">→</div>
+<div class="caja">Reproducción</div>
+</div>
+
+<p>El <strong>buffer</strong> almacena temporalmente datos recibidos antes de que sean reproducidos. Si durante un periodo llegan menos datos de los que consume la reproducción, el buffer puede compensar esa diferencia. Si se vacía, la reproducción tendrá que esperar.</p>
+
+<div class="idea">
+Las plataformas pueden disponer de varias versiones del mismo vídeo con diferentes bitrates y adaptar la transmisión a las condiciones de la conexión.
+</div>
+</section>
+
+<section>
+<h2>7. Conclusión</h2>
+<div class="flujo">
+<div class="caja">Bits</div><div class="flecha">→</div>
+<div class="caja">Codificación</div><div class="flecha">→</div>
+<div class="caja">Compresión</div><div class="flecha">→</div>
+<div class="caja">Códec</div><div class="flecha">→</div>
+<div class="caja">Bitrate</div><div class="flecha">→</div>
+<div class="caja">Streaming</div>
+</div>
+
+<label><strong>Explica con tus palabras la relación entre estos conceptos.</strong></label>
+<textarea style="min-height:150px" placeholder="Escribe aquí tu conclusión..."></textarea>
+</section>
+
+</main>
+
+<script>
+function probarCodigo(codigo){
+ const r=document.getElementById("resultadoCodigo");
+ if(codigo==="ascii") r.innerHTML="<strong>ASCII:</strong><br>Espa??a est?? preparada";
+ if(codigo==="utf8") r.innerHTML="<strong>UTF-8:</strong><br>España está preparada";
+ if(codigo==="win") r.innerHTML="<strong>Windows-1252:</strong><br>EspaÃ±a estÃ¡ preparada";
+ if(codigo==="iso") r.innerHTML="<strong>ISO-8859-1:</strong><br>EspaÃ±a estÃ¡ preparada";
+}
+function comprobarCodigo(){
+ const v=document.getElementById("codigoElegido").value;
+ const r=document.getElementById("conclusionCodigo");
+ if(!v) r.innerHTML="Selecciona primero una codificación.";
+ else if(v==="utf8") r.innerHTML='<span class="correcto">Correcto.</span> UTF-8 interpreta esos bytes de forma que aparecen correctamente «ñ» y «á».';
+ else r.innerHTML='<span class="error">Revisa tus pruebas.</span> Busca qué opción mostró correctamente «España está preparada».';
+}
+function evaluar(idSec,idInput,idRes){
+ const orig=document.getElementById(idSec).textContent.trim();
+ const comp=document.getElementById(idInput).value.trim();
+ const r=document.getElementById(idRes);
+ if(!comp){r.innerHTML="Escribe primero una propuesta.";return}
+ const reduccion=((orig.length-comp.length)/orig.length)*100;
+ let txt="<strong>Tamaño original:</strong> "+orig.length+" caracteres<br><strong>Tu representación:</strong> "+comp.length+" caracteres<br>";
+ if(reduccion>0) txt+="<strong>Reducción:</strong> "+reduccion.toFixed(1)+" %";
+ else if(reduccion===0) txt+="No has reducido el tamaño.";
+ else txt+="Tu representación ocupa <strong>"+Math.abs(reduccion).toFixed(1)+" % más</strong> que el original.";
+ r.innerHTML=txt;
+}
+function evaluarA(){evaluar("secuenciaA","compA","resA")}
+function evaluarB(){evaluar("secuenciaB","compB","resB")}
+function comprobarCalculos(){
+ const valores=[
+  Number(document.getElementById("aMb").value),Number(document.getElementById("aMB").value),
+  Number(document.getElementById("bMb").value),Number(document.getElementById("bMB").value),
+  Number(document.getElementById("cMb").value),Number(document.getElementById("cMB").value)
+ ];
+ const correctos=[1200,150,3000,375,7200,900];
+ const r=document.getElementById("resCalculos");
+ if(valores.some(v=>!Number.isFinite(v)||v===0)){r.innerHTML="Completa primero las seis casillas.";return}
+ let aciertos=0;
+ valores.forEach((v,i)=>{if(Math.abs(v-correctos[i])<0.01)aciertos++});
+ if(aciertos===6) r.innerHTML='<span class="correcto">Todos los cálculos son correctos.</span> Ahora utiliza esos datos para tomar la decisión de streaming.';
+ else r.innerHTML="Tienes <strong>"+aciertos+" de 6</strong> resultados correctos. Revisa: bitrate × 600 segundos y después divide los megabits entre 8 para obtener megabytes.";
+}
+</script>
+
+<div class="barra-informe">
+<button type="button" onclick="generarInforme()">📄 Generar informe PDF</button>
+<span style="margin-left:10px">Se incluirán tus respuestas en el documento.</span>
+</div>
+
+
+<script id="informeScript">
+function generarInforme(){
+  const nombre=(document.getElementById("nombreAlumno")?.value||"").trim();
+  const grupo=(document.getElementById("grupoAlumno")?.value||"").trim();
+  if(!nombre || !grupo){
+    alert("Antes de generar el informe, escribe tu nombre, apellidos y grupo.");
+    return;
+  }
+
+  // Convertimos temporalmente los controles en texto visible para que el PDF
+  // conserve con fiabilidad lo que ha escrito/seleccionado el alumnado.
+  const controles=[...document.querySelectorAll("textarea,input:not([type=button]),select")];
+  const copias=[];
+  controles.forEach(el=>{
+    const span=document.createElement("div");
+    span.className="solo-informe";
+    span.style.whiteSpace="pre-wrap";
+    span.style.borderBottom="1px solid #999";
+    span.style.padding="5px 2px";
+    span.style.margin="3px 0 10px";
+    let valor="";
+    if(el.tagName==="SELECT"){
+      valor=el.options[el.selectedIndex]?.text || "";
+    }else{
+      valor=el.value || "";
+    }
+    span.textContent=valor || "— Sin respuesta —";
+    el.parentNode.insertBefore(span,el.nextSibling);
+    copias.push(span);
+  });
+
+  const tituloOriginal=document.title;
+  document.title=(nombre+"_"+grupo+"_bits_streaming").replace(/[\\/:*?"<>|]+/g,"_");
+  window.print();
+  setTimeout(()=>{
+    copias.forEach(x=>x.remove());
+    document.title=tituloOriginal;
+  },800);
+}
+</script>
+
+</body>
+</html>
